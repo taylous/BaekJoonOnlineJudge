@@ -1,0 +1,32 @@
+Robot 1 crashes into the wall
+OK
+Robot 9 crashes into robot 6
+Robot 9 crashes into robot 2
+Robot 9 crashes into robot 3
+Robot 9 crashes into robot 7
+Robot 2 crashes into the wall
+Robot 3 crashes into robot 2
+Robot 4 crashes into the wall
+Robot 12 crashes into the wall
+Robot 2 crashes into the wall
+Robot 3 crashes into the wall
+Robot 2 crashes into the wall
+Robot 2 crashes into the wall
+OK
+Robot 33 crashes into robot 32
+Robot 25 crashes into robot 15
+Robot 2 crashes into the wall
+Robot 3 crashes into the wall
+Robot 3 crashes into robot 2
+Robot 1 crashes into the wall
+Robot 30 crashes into robot 27
+OK
+Robot 2 crashes into robot 11
+OK
+OK
+OK
+Robot 61 crashes into robot 82
+Robot 1 crashes into the wall
+Robot 71 crashes into robot 44
+Robot 34 crashes into robot 72
+OK
