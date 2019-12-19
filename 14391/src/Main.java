@@ -1,85 +1,85 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
 
+    static final int DECIMAL = 10;
     static int[][] board;
 
-    static int[] loX = { -1, 0, 1, 0 };
-    static int[] loY = { 0, 1, 0, -1 };
+    static int[] loX = {1, 0};
+    static int[] loY = {0, 1};
 
-	static int Answer;
-	static int N;
-	static int M;
-	
-	public static void main(String[] args) throws IOException {
-		
-		//BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedReader br = new BufferedReader(new FileReader("14391//input.txt"));
-        StringTokenizer st;
+    static int Answer;
+    static int N;
+    static int M;
 
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
         char[] container;
-		
-		int T = Integer.parseInt(br.readLine());
-		for(int test_case = 0; test_case < T; test_case++) {
 
-		    st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
-		    N = Integer.parseInt(st.nextToken());
-		    M = Integer.parseInt(st.nextToken());
+        board = new int[N][M];
 
-		    board = new int[N][M];
+        for (int i = 0; i < N; i++) {
 
-		    for(int i = 0; i < N; i++) {
+            container = br.readLine().toCharArray();
 
-		        container = br.readLine().toCharArray();
-
-		        for(int j = 0; j < M; j++)
-		            board[i][j] = container[j] - '0';
-            }
-		    pieceOfPaper(new boolean[N][M], N * M, 0);
-			System.out.println("Case #"+(test_case+1)+" "+Answer);
-		}
-		
-		br.close();
-	}
-
-	static void pieceOfPaper(boolean[][] visited, int remain, int total) {
-
-	    if(remain == 0) {
-
-	        Answer = Math.max(Answer, total);
-	        return;
+            for (int j = 0; j < M; j++)
+                board[i][j] = container[j] - '0';
         }
-	    int nx, ny;
-	    int temp, offset;
+        pieceOfPaper(new boolean[N][M], N * M, 0);
+        System.out.println(Answer);
+        br.close();
+    }
 
-	    for(int i = 0; i < N; i++) {
+    static void pieceOfPaper(boolean[][] origin, int remain, int total) {
 
-	        for(int j = 0; j < M; j++) {
+        boolean[][] visited = new boolean[N][M];
+        for (int i = 0; i < N; i++)
+            System.arraycopy(origin[i], 0, visited[i], 0, M);
 
-	            if(!visited[i][j]) {
+        if (remain == 0) {
 
-	                visited[i][j] = true;
-	                pieceOfPaper(visited, remain - 1, total + board[i][j]);
+            Answer = Math.max(Answer, total);
+            return;
+        }
+        int nx, ny;
+        int temp, len;
 
-	                for (int k = 0; k < 4; k++) {
+        for (int i = 0; i < N; i++) {
 
-	                    temp = board[i][j];
-	                    offset = 10;
-	                    nx = i;
-	                    ny = j;
+            for (int j = 0; j < M; j++) {
 
-	                    while(nx < N && ny < M && !visited[nx][ny]) {
+                if (!visited[i][j]) {
 
-	                        nx += loX[k];
-	                        ny += loY[k];
+                    for (int k = 0; k < 2; k++) {
 
-	                        visited[nx][ny] = true;
-	                        temp += board[nx][ny] * offset;
-	                        pieceOfPaper(visited, remain - k + 1, total + temp);
+                        temp = 0;
+                        len = 1;
+                        nx = i;
+                        ny = j;
+
+                        while (nx >= 0 && nx < N && ny >= 0 && ny < M && !visited[nx][ny]) {
+
+                            visited[nx][ny] = true;
+                            temp *= DECIMAL;
+                            temp += board[nx][ny];
+
+                            pieceOfPaper(visited, remain - len++, total + temp);
+
+                            nx += loX[k];
+                            ny += loY[k];
                         }
+                        for (int r = 0; r < N; r++)
+                            System.arraycopy(origin[r], 0, visited[r], 0, M);
                     }
+                    return;
                 }
             }
         }
