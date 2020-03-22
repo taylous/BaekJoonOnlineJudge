@@ -5,10 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class Main {
+public class Main2 {
 
     private static int[][] room;
     private static int[][] distance;
+    private static int[][] cache;
     private static ArrayList<Location> locations = new ArrayList<>();
 
     private static int[] loX = { -1, 0, 1, 0 };
@@ -21,7 +22,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        // BufferedReader br = new BufferedReader(new FileReader("src\\BOJ4991\\sample_input.txt"));
+        //BufferedReader br = new BufferedReader(new FileReader("src\\BOJ4991\\sample_input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuffer sb = new StringBuffer();
         StringTokenizer st;
@@ -65,8 +66,13 @@ public class Main {
                     }
                 }
             }
-            if(calculateDistance(dustNumber))
-                combinations(new int[dustNumber - 1], 1, dustNumber - 1);
+            if(calculateDistance(dustNumber)) {
+                cache = new int[dustNumber][(1 << dustNumber)];
+                for(int i = 0; i < dustNumber; i++)
+                    Arrays.fill(cache[i], Integer.MAX_VALUE);
+
+                Answer = robotCleaner(0, (1 << 0), dustNumber);
+            }
             sb.append(Answer == Integer.MAX_VALUE ? -1 : Answer);
             sb.append("\n");
 
@@ -139,42 +145,34 @@ public class Main {
         return true;
     }
 
-    static int robotCleaner(int[] comb, int size) {
+    static int robotCleaner(int start, int visited, int size) {
 
-        int ret = 0;
-        int from = 0;
+        if(visited == (1 << size) - 1) {
+            return 0;
+        }
+
+        if(cache[start][visited] != Integer.MAX_VALUE)
+            return cache[start][visited];
 
         for(int to = 0; to < size; to++) {
 
-            ret += distance[from][comb[to]];
-            from = comb[to];
-        }
-        return ret;
-    }
+            if(start == to)
+                continue;
 
-    static void combinations(int[] comb, int index, int size) {
-
-        if(index == size + 1) {
-            Answer = Math.min(Answer, robotCleaner(comb, size));
-            return;
-        }
-
-        for(int i = 0; i < size; i++) {
-            if(comb[i] == 0) {
-                comb[i] = index;
-                combinations(comb, index + 1, size);
-                comb[i] = 0;
+            if((visited & (1 << to)) == 0) {
+                cache[start][visited] = Math.min(cache[start][visited], robotCleaner(to, (visited | (1 << to)), size) + distance[start][to]);
             }
         }
+        return cache[start][visited];
     }
-}
 
-class Location {
-    int x;
-    int y;
+    private static class Location {
+        int x;
+        int y;
 
-    Location(int x, int y) {
-        this.x = x;
-        this.y = y;
+        Location(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
     }
 }
